@@ -222,10 +222,22 @@ function closeModal(){
     };
 
     forms.forEach(item => {
-        postData(item);
+        bindPostData(item);
     });
 
-    function postData(form) {
+    const postData =  async function (url, data) {
+        const res = await fetch(url, {
+             method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                },
+                body: data
+        });
+        return await res.json();
+    };
+
+
+    function bindPostData(form) {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
@@ -247,13 +259,8 @@ function closeModal(){
             });
           
 
-             fetch("../server.php", {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json',
-                },
-                body: JSON.stringify(object)
-            }).then(data => data.text())
+            
+            postData('http://localhost:3000/requests', JSON.stringify(object))
             .then(data =>{
                 console.log(data);
                 showThanksModal(message.success);
@@ -291,17 +298,8 @@ function closeModal(){
             closeModal();
     }, 4000);
 }
-
-fetch('https://jsonplaceholder.typicode.com/posts', {
-    method: 'POST',
-    body: JSON.stringify({name: 'Alex'}),
-    headers:{
-        'Content-type': 'application/json'
-    }
-})
-      .then(response => response.json())
-      .then(json => console.log(json))
+fetch('http://localhost:3000/menu')
+    .then(data => data.json())
+    .then(res => console.log(res));
 
 });
-
-
